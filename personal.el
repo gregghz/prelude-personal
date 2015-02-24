@@ -10,7 +10,21 @@
 
 (add-hook 'prelude-mode-hook 'lucid-mode)
 (add-hook 'ensime-mode-hook 'ensime-aux-mode)
-(add-hook 'scala-mode-hook 'ensime-mode)
+(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
+(add-hook 'projectile-mode-hook 'projectile-aux-mode)
+
+;; make mode line cleaner for scala
+(add-hook 'projectile-mode-hook        '(lambda() (diminish 'projectile-mode)))
+(add-hook 'ensime-mode-hook            '(lambda() (diminish 'ensime-mode " e")))
+(add-hook 'company-mode-hook           '(lambda() (diminish 'company-mode)))
+(add-hook 'prelude-mode-hook           '(lambda() (diminish 'prelude-mode)))
+(add-hook 'helm-mode-hook              '(lambda() (diminish 'helm-mode)))
+(add-hook 'magit-auto-revert-mode-hook '(lambda() (diminish 'magit-auto-revert-mode)))
+(add-hook 'subword-mode-hook           '(lambda() (diminish 'subword-mode)))
+(add-hook 'yas-minor-mode-hook         '(lambda() (diminish 'yas-minor-mode)))
+(add-hook 'whitespace-mode-hook        '(lambda() (diminish 'whitespace-mode)))
+(add-hook 'smartparens-mode-hook       '(lambda() (diminish 'smartparens-mode)))
+(add-hook 'lucid-mode-hook             '(lambda() (diminish 'lucid-mode)))
 
 (setq mode-require-final-newline nil)
 (setq require-final-newline nil)
