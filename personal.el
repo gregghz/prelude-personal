@@ -79,7 +79,7 @@
 (defun my-js2-hook ()
   (require 'js)
   (setq js-indent-level 4
-        indent-tabs-mode t
+        indent-tabs-mode nil
         c-basic-offset 4))
 (add-hook 'js2-mode-hook 'my-js2-hook)
 
