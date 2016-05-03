@@ -6,3 +6,5 @@
             (define-key map (kbd "C-c p s") 'helm-projectile-ag)
             (define-key map (kbd "C-c p i") 'projectile-invalidate-cache)
             map))
+
+(provide 'projectile-aux)

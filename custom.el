@@ -3,30 +3,70 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ahs-default-range (quote ahs-range-display))
+ '(ahs-modes
+   (quote
+    (actionscript-mode apache-mode bat-generic-mode c++-mode c-mode csharp-mode css-mode dos-mode emacs-lisp-mode html-mode ini-generic-mode java-mode javascript-mode js-mode lisp-interaction-mode lua-mode latex-mode makefile-mode makefile-gmake-mode markdown-mode moccur-edit-mode nxml-mode nxhtml-mode outline-mode perl-mode cperl-mode php-mode python-mode rc-generic-mode reg-generic-mode ruby-mode sgml-mode sh-mode squirrel-mode text-mode tcl-mode visual-basic-mode scala-mode)))
+ '(avy-all-windows (quote all-frames))
+ '(custom-safe-themes
+   (quote
+    ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
  '(ensime-ac-case-sensitive t)
  '(ensime-ac-enable-argument-placeholders nil)
  '(ensime-auto-connect (quote always))
- '(ensime-company-case-sensitive t)
+ '(ensime-company-case-sensitive nil)
+ '(ensime-default-java-flags
+   (quote
+    ("-Xss2m -Xms1024m -Xmx2048m -XX:ReservedCodeCacheSize=128m -XX:MaxMetaspaceSize=512m")))
  '(ensime-graphical-tooltips t)
+ '(ensime-implicit-gutter-icons t)
+ '(ensime-sbt-command "/usr/bin/sbt")
+ '(ensime-server-logback nil)
+ '(ensime-server-version "0.9.10-SNAPSHOT")
  '(ensime-typecheck-idle-interval 2)
  '(ensime-typecheck-interval 10)
- '(erc-modules
-   (quote
-    (notifications smiley image completion spelling truncate netsplit fill button match track readonly networks ring autojoin noncommands irccontrols move-to-prompt stamp menu list)))
+ '(global-mark-ring-max 32)
+ '(global-prettify-symbols-mode t)
+ '(global-visual-line-mode t)
  '(haskell-mode-hook (quote (turn-on-haskell-doc turn-on-haskell-indentation)))
+ '(helm-M-x-fuzzy-match t)
+ '(helm-M-x-requires-pattern t)
+ '(helm-M-x-reverse-history t)
+ '(helm-adaptive-mode t nil (helm-adaptive))
  '(helm-ag-base-command "ag --nocolor --nogroup -U")
- '(helm-candidate-number-limit 1000)
+ '(helm-autoresize-max-height 30)
+ '(helm-candidate-number-limit 100)
+ '(helm-default-external-file-browser "pcmanfm")
+ '(helm-external-programs-associations nil)
+ '(helm-input-idle-delay 0.03)
+ '(helm-move-to-line-cycle-in-source t)
+ '(helm-quick-update t)
+ '(js2-global-externs (quote (lucid goog $ jQuery)))
+ '(magit-auto-revert-mode nil)
  '(magit-diff-options (quote ("--function-context")))
  '(magit-diff-refine-hunk (quote all))
  '(magit-highlight-indentation (quote ((".*" . tabs))))
  '(magit-item-highlight-face (quote magit-item-highlight))
+ '(magit-refs-show-commit-count (quote all))
+ '(magit-revert-buffers (quote silent) t)
  '(magit-show-diffstat t)
+ '(mark-ring-max 32)
+ '(max-lisp-eval-depth 16000)
+ '(max-specpdl-size 24335)
  '(minimap-dedicated-window nil)
+ '(mo-git-blame-blame-window-width 20)
+ '(mo-git-blame-use-magit (quote always))
  '(paradox-automatically-star t)
- '(paradox-github-token "6c071e67331f9aef4c48e61f4c168569f5d874aa")
+ '(paradox-github-token "51d04e15e7f398cb4cd272f216c0b4286997eee9")
+ '(persp-initial-frame-name "init")
+ '(persp-keymap-prefix "")
+ '(powerline-default-separator (quote wave))
+ '(powerline-height nil)
  '(projectile-completion-system (quote helm))
  '(projectile-enable-caching t)
+ '(projectile-file-exists-local-cache-expire 900)
  '(projectile-global-mode t)
+ '(projectile-globally-ignored-buffers (quote ("*ensime-update*")))
  '(projectile-globally-ignored-directories
    (quote
     (".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn" "build" "target" ".ensime_lucene")))
@@ -37,13 +77,27 @@
    (quote
     (".projectile" ".git-no-do-not-do-this" ".hg" ".fslckout" ".bzr" "_darcs" ".ensime")))
  '(projectile-switch-project-action (quote projectile-find-file))
- '(projectile-tags-command "ctags-exuberant -Re -f %s %s")
+ '(projectile-tags-command
+   "ctags-exuberant --exclude=\"*.min.js\" --exclude=\"*.css\" --languages=-JavaScript -Re -f %s %s")
  '(projectile-use-git-grep t)
+ '(restclient-same-buffer-response t)
  '(safe-local-variable-values
    (quote
     ((hamlet/basic-offset . 4)
      (haskell-process-use-ghci . t)
      (haskell-indent-spaces . 4))))
+ '(scala-indent:default-run-on-strategy 1)
+ '(sort-fold-case t t)
+ '(sp-autoescape-string-quote nil)
+ '(sp-autoskip-closing-pair t)
+ '(sp-cancel-autoskip-on-backward-movement nil)
+ '(sp-highlight-wrap-overlay nil)
+ '(sp-show-pair-from-inside t)
+ '(visual-line-fringe-indicators (quote (left-curly-arrow right-curly-arrow)))
+ '(web-mode-block-padding 4)
+ '(web-mode-enable-auto-closing t)
+ '(web-mode-script-padding 4)
+ '(web-mode-style-padding 4)
  '(whitespace-action nil)
  '(whitespace-line-column 80000))
 (custom-set-faces
@@ -51,10 +105,12 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ahs-edit-mode-face ((t (:background "peru" :foreground "White"))))
  '(custom-comment ((t (:background "dim gray"))))
+ '(ensime-implicit-highlight ((t nil)))
  '(highlight ((t (:background "#454545" :foreground "#ffffff" :underline t))))
  '(hl-line ((t (:inherit nil :background "#383838" :underline nil))))
- '(magit-blame-culprit ((t (:inherit magit-blame-header :foreground "dark red"))) t)
+ '(magit-blame-culprit ((t (:inherit magit-blame-header :foreground "dark red"))))
  '(magit-diff-add ((t (:inherit diff-added :foreground "forest green"))))
  '(magit-diff-del ((t (:inherit diff-removed :foreground "light coral"))))
  '(magit-diff-file-header ((t (:inherit diff-file-header))))
@@ -71,4 +127,5 @@
  '(sbt:error ((t (:inherit error :foreground "firebrick"))))
  '(sbt:info ((t (:inherit success :foreground "forest green"))))
  '(sbt:warning ((t (:inherit warning :foreground "chocolate"))))
+ '(spaceline-unmodified ((t (:background "DarkGoldenRod2" :foreground "#3E3D31" :inherit (quote mode-line)))))
  '(whitespace-line ((t (:background "#3F3F3F")))))
