@@ -20,7 +20,7 @@
                             paradox
                             persp-mode
                             persp-projectile
-                            spacemacs-theme
+                            string-inflection
                             tuareg
                             use-package
                             utop
@@ -31,13 +31,13 @@
 
 (setq use-package-always-ensure t)
 
+(require 'kotlin-mode)
+
 (require 'package)
 (add-to-list 'package-archives
              '("marmalade" .
                "http://marmalade-repo.org/packages/"))
 (package-initialize)
-
-(require 'thread-dump)
 
 (persp-mode)
 (require 'persp-projectile)
@@ -77,11 +77,9 @@
 (use-package comment-dwim-2
   :bind ("M-;" . comment-dwim-2))
 
-(use-package scala-mode
+(use-package scala-mode2
   :commands scala-mode
-  :diminish scala-mode
-  :config
-  (setq prettify-symbols-alist scala-prettyify-symbols))
+  :diminish scala-mode)
 
 (use-package projectile
   :diminish projectile-mode
@@ -92,6 +90,11 @@
 (use-package company
   :diminish company-mode)
 
+(use-package ensime
+  :commands ensime ensime-mode
+  :diminish ensime-mode)
+(add-hook 'scala-mode-hook 'ensime-mode)
+
 ;;; Code:
 (setq prelude-whitespace t)
 (setq-default tab-width 4)
@@ -100,7 +103,6 @@
 
 ;; make mode line cleaner for scala
 (add-hook 'prelude-mode                '(lambda() (diminish 'prelude-mode)))
-(add-hook 'ensime-mode-hook            '(lambda() (diminish 'ensime-mode " e")))
 (add-hook 'helm-mode-hook              '(lambda() (diminish 'helm-mode)))
 (add-hook 'magit-auto-revert-mode-hook '(lambda() (diminish 'magit-auto-revert-mode)))
 (add-hook 'subword-mode-hook           '(lambda() (diminish 'subword-mode)))
@@ -156,10 +158,31 @@
   (setq c-basic-indent 4))
 
 (use-package multiple-cursors
-  :bind (("C-S-c C-S-c" . mc/edit-lines)
+  :bind (;; Mark one more occurrence
+         ("C-c m n" . mc/mark-next-like-this-symbol)
+         ("C-c m p" . mc/mark-previous-symbol-like-this)
          ("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
-         ("M-RET" . mc/mark-all-like-this)))
+
+         ;; Juggle around with current cursors
+         ("C-c m u" . mc/unmark-next-like-this)
+         ("C-c m x" . mc/unmark-previous-like-this)
+         ("C-c m s" . mc/skip-to-next-like-this)
+         ("C-c m z" . mc/skip-to-previous-like-this)
+
+         ;; Mark many occurrences
+         ("C-c m e" . mc/edit-beginnings-of-lines)
+         ("C-c m a" . mc/mark-all-symbols-like-this)
+         ("C-c m r" . mc/mark-all-in-region)
+         ("C-c m d" . mc/mark-all-symbols-like-this-in-defun)
+         ("C-c m o" . mc/mark-all-dwim)
+
+         ;; Special
+         ("C-c m h" . mc/mark-sgml-tag-pair)
+         ("C-c m 1" . mc/insert-numbers)
+         ("C-c m /" . mc/insert-letters)
+         ("C-c m S" . mc/sort-regions)
+         ("C-c m R" . mc/reverse-regions)))
 
 ;;; js hooks
 (defun my-js2-hook ()
@@ -246,6 +269,13 @@
 (global-set-key (kbd "C-z c") 'string-inflection-camelcase)        ;; Force to CamelCase
 (global-set-key (kbd "C-z l") 'string-inflection-lower-camelcase)  ;; Force to lowerCamelCase
 (global-set-key (kbd "C-z j") 'string-inflection-java-style-cycle) ;; Cycle through Java styles
+
+(defun my/capitalize-first-char (&optional string)
+  "Capitalize only the first character of the input STRING."
+  (when (and string (> (length string) 0))
+    (let ((first-char (substring string 0 1))
+          (rest-str   (substring string 1)))
+      (concat (capitalize first-char) rest-str))))
 
 (provide 'personal)
 ;;; personal.el ends here
