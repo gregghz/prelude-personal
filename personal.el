@@ -5,7 +5,6 @@
 (prelude-require-packages '(
                             ag
                             comment-dwim-2
-                            ensime
                             erc-image
                             evil-visualstar
                             exec-path-from-shell
@@ -26,18 +25,28 @@
                             utop
                             ))
 
+;; the package manager
+(require 'package)
+(setq
+ package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                    ("org" . "http://orgmode.org/elpa/")
+                    ("melpa" . "http://melpa.org/packages/")
+                    ("melpa-stable" . "http://stable.melpa.org/packages/"))
+ package-archive-priorities '(("melpa-stable" . 1)))
+
+
+(package-initialize)
+(when (not package-archive-contents)
+  (package-refresh-contents)
+  (package-install 'use-package))
+(require 'use-package)
+
 ;; my things
 (add-to-list 'load-path "~/.emacs.d/personal/lisp")
 
 (setq use-package-always-ensure t)
 
 (require 'kotlin-mode)
-
-(require 'package)
-(add-to-list 'package-archives
-             '("marmalade" .
-               "http://marmalade-repo.org/packages/"))
-(package-initialize)
 
 (persp-mode)
 (require 'persp-projectile)
@@ -48,25 +57,29 @@
   :config
   (yas-global-mode 1))
 
-(sp-local-pair 'scala-mode "(" nil :post-handlers '(("||\n[i]" "RET")))
-(sp-local-pair 'scala-mode "{" nil :post-handlers '(("||\n[i]" "RET") ("| " "SPC")))
+;(sp-local-pair 'scala-mode "(" nil :post-handlers '(("||\n[i]" "RET")))
+;(sp-local-pair 'scala-mode "{" nil :post-handlers '(("||\n[i]" "RET") ("| " "SPC")))
 
 ;;; pretty symbols
 (setq global-prettify-symbols-mode 1)
-(setq scala-prettify-symbols
-      '(("=>" . ?⇒)
-        ("<-" . ?←)
-        ("->" . ?→)
-        ("<<<" . ?⋘)
-        (">>>" . ?⋙)
-        ("lambda" . ?λ)
-        ("alpha" . ?α)
-        ("beta" . ?β)
-        ("Unit" . ?∅)))
+;; (setq scala-prettify-symbols
+;;       '(("=>" . ?⇒)
+;;         ("<-" . ?←)
+;;         ("->" . ?→)
+;;         ("<<<" . ?⋘)
+;;         (">>>" . ?⋙)
+;;         ("lambda" . ?λ)
+;;         ("alpha" . ?α)
+;;         ("beta" . ?β)
+;;         ("Unit" . ?∅)))
 
 ;; kill C-z
 (global-set-key (kbd "C-z") nil)
 (global-set-key (kbd "C-x C-z") nil)
+
+(global-set-key (kbd "C-S-s") nil)
+
+(global-set-key (kbd "C-z s") 'sort-lines)
 
 (use-package highlight-symbol
              :diminish highlight-symbol-mode
@@ -76,10 +89,6 @@
 
 (use-package comment-dwim-2
   :bind ("M-;" . comment-dwim-2))
-
-(use-package scala-mode2
-  :commands scala-mode
-  :diminish scala-mode)
 
 (use-package projectile
   :diminish projectile-mode
@@ -91,15 +100,37 @@
   :diminish company-mode)
 
 (use-package ensime
-  :commands ensime ensime-mode
-  :diminish ensime-mode)
-(add-hook 'scala-mode-hook 'ensime-mode)
+  :ensure t
+  :pin melpa-stable)
+
+(use-package etags-select
+  :commands etags-select-find-tag)
+
+(use-package ggtags)
+
+(global-set-key (kbd "C-c C-h") 'sbt-hydra)
+(use-package sbt-mode
+  :init
+  (defun run-protify ()
+    (interactive)
+    (sbt-command "protify"))
+  (defun run-android-install ()
+    (interactive)
+    (sbt-command "android:install"))
+
+  :bind
+  (("C-c C-a p" . run-protify)
+   ("C-c C-a i" . run-android-install)))
 
 ;;; Code:
 (setq prelude-whitespace t)
 (setq-default tab-width 4)
 (electric-indent-mode +1)
 (load-theme 'wombat t)
+
+(add-hook 'prog-mode-hook '(lambda()
+                             (highlight-symbol-mode 1)
+                             (rainbow-mode 1)))
 
 ;; make mode line cleaner for scala
 (add-hook 'prelude-mode                '(lambda() (diminish 'prelude-mode)))
@@ -148,6 +179,12 @@
         (append
          (split-string-and-unquote path ":")
          exec-path)))
+
+(use-package zeal-at-point
+  :commands zeal-at-point
+  :bind (("C-z C-z" . zeal-at-point))
+  :config
+  (add-to-list 'zeal-at-point-mode-alist '(kotlin-mode . "android")))
 
 (use-package php-mode
   :commands php-mode
@@ -203,9 +240,9 @@
 
 (scroll-bar-mode -1)
 
-(defun two-tab-width ()
-  (setq tab-width 2))
-(add-hook 'scala-mode-hook 'two-tab-width)
+;(defun two-tab-width ()
+;  (setq tab-width 2))
+;(add-hook 'scala-mode-hook 'two-tab-width)
 
 (setq ruby-indent-level 2)
 (add-hook 'ruby-mode-hook 'two-tab-width)
@@ -224,10 +261,10 @@
 
 ;; Status Code Helpers
 
-(fset 'jump-to-routes-file
-      "\C-s.main\C-m\M-b\C-b\M-\S-b\M-w\C-cpf\C-y.scala\C-m")
+;; (fset 'jump-to-routes-file
+;;       "\C-s.main\C-m\M-b\C-b\M-\S-b\M-w\C-cpf\C-y.scala\C-m")
 
-(global-set-key (kbd "C-z g") 'jump-to-routes-file)
+;; (global-set-key (kbd "C-z g") 'jump-to-routes-file)
 
 (add-hook 'sgml-mode-hook 'emmet-mode)
 (add-hook 'css-mode-hook 'emmet-mode)
@@ -276,6 +313,31 @@
     (let ((first-char (substring string 0 1))
           (rest-str   (substring string 1)))
       (concat (capitalize first-char) rest-str))))
+
+(defun my/downcase-first-char (&optional string)
+  "Capitalize only the first character of the input STRING."
+  (when (and string (> (length string) 0))
+    (let ((first-char (substring string 0 1))
+          (rest-str   (substring string 1)))
+      (concat (downcase first-char) rest-str))))
+
+(defun compile-in-parent-directory ()
+  (interactive)
+  (let ((default-directory
+          (if (string= (file-name-extension buffer-file-name) "ml")
+              (concat default-directory "..")
+            default-directory))))
+  (call-interactively #'compile))
+
+(defun android-compile ()
+  (interactive)
+  (let ((default-directory "/home/gregg/lucid/main/visio-viewer-android"))
+    (call-interactively #'compile)))
+
+(add-to-list 'compilation-error-regexp-alist 'kotlin)
+(add-to-list 'compilation-error-regexp-alist-alist
+             '(kotlin
+               "^e: \\([^:]+\\): (\\([0-9]+\\), \\([0-9]+\\)): .*" 1 2 3))
 
 (provide 'personal)
 ;;; personal.el ends here
