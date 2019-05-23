@@ -17,7 +17,8 @@
          (current-project (car parts))
          (path (string-join (cdr parts) "/"))
          (current-line (sim-line-range))
-         (branch ()))
+         (branch "master";; (magit-get-current-branch)
+                 ))
     (concat "https://bitbucket.nike.com/projects/RSTINV/repos/" current-project "/browse/" path "?at=refs%2Fheads%2F" branch "#" current-line)))
 
 (defun sim-line-number ()

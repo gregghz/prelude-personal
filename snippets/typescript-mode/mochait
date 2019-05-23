@@ -1,0 +1,7 @@
+# -*- mode: snipper -*-
+# name: mocha it
+# key: it
+# --
+it('$1', function () {
+  $0
+});
