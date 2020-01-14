@@ -19,7 +19,7 @@
          (current-line (sim-line-range))
          (branch "master";; (magit-get-current-branch)
                  ))
-    (concat "https://bitbucket.nike.com/projects/RSTINV/repos/" current-project "/browse/" path "?at=refs%2Fheads%2F" branch "#" current-line)))
+    (concat "https://bitbucket.nike.com/projects/RSTRFID/repos/" current-project "/browse/" path "?at=refs%2Fheads%2F" branch "#" current-line)))
 
 (defun sim-line-number ()
   (car (cdr (split-string (what-line) " "))))
